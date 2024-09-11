@@ -1,0 +1,70 @@
+<%- include('partials/header') %>
+    <%- include('partials/navbar') %>
+        <main class="container p-5">
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Pergunta</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="question">
+                                <div class="mb-3">
+                                    <label for="titulo" class="form-label">Título</label>
+                                    <input type="text" name="titulo" id="titulo" class="form-control"
+                                        placeholder="Insira o título da sua pergunta">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="descricao" class="form-label">Descrição</label>
+                                    <textarea name="descricao" id="descricao" cols="30" rows="10" type="text"
+                                        class="form-control" style="resize: none;"
+                                        placeholder="Digite sua pergunta"></textarea>
+                                </div>
+                                <div class="mb-3 d-flex justify-content-center align-items-center">
+                                    <button type="submit" class="btn btn-success">Enviar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script>
+            const form = document.querySelector("#question")
+
+            form.addEventListener('submit', e => {
+
+                e.preventDefault()
+
+                const titulo = document.querySelector("#titulo").value
+                const descricao = document.querySelector("#descricao").value
+
+                fetch('/save-question', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        titulo: titulo,
+                        descricao: descricao,
+                    })
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json()
+                        }
+                    })
+                    .then((json) => {
+                        if (json) {
+                            alert("Dúvida postada com sucesso.")
+                            if (json.lengh > 0){
+                                window.location.replace('/')
+                            }
+                        }
+                    })
+                    .catch(e => console.log(e))
+
+            })
+
+        </script>
+        <%- include('partials/footer') %>
